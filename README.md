@@ -1,12 +1,12 @@
 # Sir-Quacks-A-Lot
 I made Sir Quacks-A-Lot because I know that the method of rubber duck debugging is really helpful for me, and I wanted to take it to the next level. Sir Quacks-A-Lot is a device that listens to the user talking through their problem, and then replies to them in short and prompting sentences to help the user figure out their problem.
 
-This device works in a few simple steps. First it has an mic that 1. detects if you are speaking using a VAD model, and 2. if you are, records what you until you stop talking. It stores your recording on a microSD card. The next step is to translate the recording to text. It does this using an API key to access groq_whisper-large-v3-turbo. Then groq outputs the text and the device sends the text through an API key to anthropic/claude-haiku-5.5. This LLM then reads the text and replies in a short and prompting message. The final step is a text to speech program that turns the reply into audio. This audio is then played through the amp and speaker, so the user can hear it.
+This device works in a few simple steps. First it has an mic that 1. detects if you are speaking using a VAD model, and 2. if you are, records what you until you stop talking. It stores your recording on a microSD card. The next step is to translate the recording to text. It does this using an API key to access whisper-large-v3-turbo. Then groq outputs the text and the device sends the text through an API key to anthropic/claude-haiku-5.5. This LLM then reads the text and replies in a short and prompting message. The final step is a text to speech program that turns the reply into audio. This audio is then played through the amp and speaker, so the user can hear it.
 
-This is the schematic:
+# This is the schematic:
 <img width="955" height="676" alt="Screenshot 2026-10-25 at 5 13 49 PM" src="https://github.com/user-attachments/assets/e44396e5-3024-4782-9cfd-b81c8cf67e5a" />
 
-This is the pcb. I shaped it like a duck to keep with the theme, but you can shape it however you like:
+# This is the pcb. I shaped it like a duck to keep with the theme, but you can shape it however you like:
 <img width="734" height="701" alt="Screenshot 2026-10-25 at 5 14 18 PM" src="https://github.com/user-attachments/assets/ed57453d-4464-4415-bad3-ba378495c524" />
 
 Here are the parts you need:
@@ -25,3 +25,21 @@ Here are the parts you need:
 ## Total Cost
 
 **$57.79** (excluding any additional taxes or fees)
+
+# Firmware
+The main firmware file is named Quacks_Code.ino, and it contains almost everything you need for the program to run. The certs.h file contains the certificates needed for the HTTP requests, so you will need to download that file as well.
+
+I left out a file named secrets.h, which contains my wifi name and password, and the two API keys I used. You will need to make an identically named file that looks like this:
+```
+#pragma once
+const char *WIFI_NAME = "wifi_name;
+const char *WIFI_PASSWORD = "wifi_password";
+
+const char *GROQ_API_KEY = "groq_api_key";
+const char *HC_API_KEY = "hc_api_key";
+```
+You will need to fill this in with your own values. Use the same groq API key that I used and mentioned above, called whisper-large-v3-turbo. For the other API key, I used anthropic/claude-haiku-5.5, although this costs money, so if you don't want to spend anything, find another LLM that can 1. read messages 2. reply and 3. be configured to give a specific kind of reply. If you change this model, you will need to change the model name in the Quacks_Code.ino file. Command+F the current model to find what to change.
+
+This program also uses two libaries which you will need to download. To do this, first download the groq_stt and ESP32-audioI2S-master zip files. Then, in ArduinoIDE, go to Sketch -> Include Library -> Add .ZIP Library -> select the zip files.
+
+I hope you enjoy this project!
